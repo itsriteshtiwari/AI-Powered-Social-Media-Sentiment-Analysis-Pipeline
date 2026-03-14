@@ -69,3 +69,28 @@ You will need Node.js installed for the frontend, Python installed for the backe
 2. Install the required Python dependencies:
    ```bash
    pip install pandas matplotlib seaborn flask flask-cors google-genai
+   ```
+3. Open `main.py` and replace `YOUR_NEW_API_KEY` with your actual Google Gemini API key.
+4. Run the sentiment analysis to generate your processed dataset:
+   ```
+   python main.py
+   ```
+5. Run Exploratory Data Analysis(EDA):
+   ```
+   python analyze_all.py
+   ```
+6. Start the Flask API server:
+   ```
+   python app.py
+   ```
+
+### 2. Frontend Setup (React)
+1. Navigate to your React project directory.
+2. Install the necessary Node packages:
+   ```
+   npm install recharts
+   ```
+3. Start the React development server:
+   ```
+   npm run dev
+   ```
