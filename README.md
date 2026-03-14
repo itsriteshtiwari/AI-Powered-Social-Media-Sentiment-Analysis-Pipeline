@@ -1,28 +1,71 @@
-# 📊 AI-Powered Social Media Sentiment Analysis Pipeline
+# 📊 AI-Powered Social Media Sentiment & EDA Dashboard
 
-An end-to-end data pipeline that processes social media text, categorizes its sentiment using Large Language Models (LLMs), and visualizes the results through a modern React dashboard.
+A full-stack data analysis pipeline that performs Exploratory Data Analysis (EDA) on social media datasets, categorizes text sentiment using Large Language Models (LLMs), and serves the insights through a REST API to a modern React dashboard.
 
 ## 🚀 Overview
 
-Social media data is inherently messy and full of nuance, sarcasm, and slang. Traditional ML models often struggle to classify this accurately. This project utilizes the **Google Gemini 2.5 Flash API** to contextually analyze raw text data and accurately categorize it into `Positive`, `Negative`, or `Neutral` sentiments.
+This project tackles the complexities of unstructured social media data (like tweets) by combining traditional data science techniques with modern Generative AI. It is broken down into four distinct modules:
 
-### Key Features
-* **LLM Integration:** Replaces traditional Naive Bayes/SVM approaches with Google's Gemini API for superior context understanding and sarcasm detection.
-* **Automated Data Processing:** Python-based pipeline utilizing `pandas` for bulk CSV data manipulation and cleaning.
-* **Rate-Limit Handling:** Custom implementation to elegantly handle API quota limits (429 Resource Exhausted) during bulk processing.
-* **Interactive Frontend:** A responsive React dashboard utilizing `recharts` to visualize sentiment volume and distribution.
+1. **AI Sentiment Pipeline:** Uses the Google Gemini 2.5 Flash API to contextually understand slang, sarcasm, and nuance.
+2. **Exploratory Data Analysis (EDA):** Analyzes metadata (dates, locations, active users) to uncover broader trends.
+3. **Backend API:** A Flask server that bridges the Python analysis with the frontend.
+4. **Interactive Dashboard:** A React web application for clean, real-time data visualization.
+
+---
+
+## 📂 Project Architecture & Files
+
+### 1. `main.py` (AI Sentiment Analysis)
+The core data processing script. 
+* Loads raw CSV data using `pandas`.
+* Cleans the text data (e.g., stripping URLs using RegEx) to prevent API errors.
+* Iterates through the data and securely calls the **Google Gemini API** to classify sentiment as `Positive`, `Negative`, or `Neutral`.
+* Implements custom rate-limiting (`time.sleep()`) to respect API free-tier quotas.
+* Outputs the categorized data to a new file: `analyzed_social_data.csv`.
+
+### 2. `analyze_all.py` (Exploratory Data Analysis)
+A standalone EDA script that generates a 4-panel Seaborn/Matplotlib dashboard analyzing the dataset's metadata:
+* **Time-Series Analysis:** Tweet volume over time.
+* **Geospatial Data:** Top 10 user locations.
+* **User Engagement:** Top 10 most active users.
+* **Network Influence:** Distribution of user friend counts (handling corrupted data via `pd.to_numeric`).
+
+### 3. `app.py` (Flask REST API)
+A lightweight backend server that exposes the analyzed data to the web.
+* Reads the processed `analyzed_social_data.csv`.
+* Aggregates the sentiment counts.
+* Serves the data securely via a GET endpoint (`/api/sentiment-data`) with CORS enabled.
+
+### 4. `App.jsx` (React Frontend)
+A responsive web dashboard built with React and `recharts`.
+* Fetches live data from the Flask API on component mount.
+* Visualizes the sentiment distribution using dynamic Bar and Pie charts.
+* Handles loading states and backend connection errors gracefully.
+
+---
 
 ## 🛠️ Tech Stack
-* **Data Processing & AI:** Python, Pandas, Google GenAI SDK
-* **Frontend:** React.js, Recharts, CSS
-* **APIs:** Google Gemini API
+
+**Data Science & AI:**
+* Python 3
+* Pandas (Data manipulation & cleaning)
+* Matplotlib & Seaborn (Data visualization)
+* Google GenAI SDK (LLM integration)
+
+**Web Development:**
+* Flask & Flask-CORS (Backend REST API)
+* React.js (Frontend UI)
+* Recharts (React charting library)
+
+---
 
 ## ⚙️ Installation & Setup
 
-### 1. Python Backend (Data Processing)
+### Prerequisites
+You will need Node.js installed for the frontend, Python installed for the backend, and a free API key from Google AI Studio.
+
+### 1. Backend Setup (Python)
 1. Clone the repository.
-2. Install the required Python libraries:
-```bash
-   pip install google-genai pandas
-```
-3. Obtain a free API key from [Google AI Studio](https://aistudio.google.com/prompts/new_chat)and replace `YOUR_API_KEY` in `main.py`.
+2. Install the required Python dependencies:
+   ```bash
+   pip install pandas matplotlib seaborn flask flask-cors google-genai
