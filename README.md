@@ -22,5 +22,7 @@ Social media data is inherently messy and full of nuance, sarcasm, and slang. Tr
 ### 1. Python Backend (Data Processing)
 1. Clone the repository.
 2. Install the required Python libraries:
-   ```bash
+```bash
    pip install google-genai pandas
+```
+3. Obtain a free API key from [Google AI Studio](https://aistudio.google.com/prompts/new_chat)and replace `YOUR_API_KEY` in `main.py`.
