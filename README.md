@@ -23,20 +23,26 @@ The core data processing script.
 * Implements custom rate-limiting (`time.sleep()`) to respect API free-tier quotas.
 * Outputs the categorized data to a new file: `analyzed_social_data.csv`.
 
-### 2. `analyze_all.py` (Exploratory Data Analysis)
+### 2. `prepare_tweetclaw_export.py` (TweetClaw Import)
+Optional helper for using reviewed X/Twitter exports from TweetClaw as the data source.
+* Accepts TweetClaw JSON, JSONL, or CSV exports.
+* Normalizes common tweet fields into the `Date`, `user_name`, `user_friends`, `user_location`, and `text` columns used by the existing analysis scripts.
+* Writes `ChatGPT tweets.csv` by default so `main.py` and `analyze_all.py` can process the imported tweets from the repository root.
+
+### 3. `analyze_all.py` (Exploratory Data Analysis)
 A standalone EDA script that generates a 4-panel Seaborn/Matplotlib dashboard analyzing the dataset's metadata:
 * **Time-Series Analysis:** Tweet volume over time.
 * **Geospatial Data:** Top 10 user locations.
 * **User Engagement:** Top 10 most active users.
 * **Network Influence:** Distribution of user friend counts (handling corrupted data via `pd.to_numeric`).
 
-### 3. `app.py` (Flask REST API)
+### 4. `app.py` (Flask REST API)
 A lightweight backend server that exposes the analyzed data to the web.
 * Reads the processed `analyzed_social_data.csv`.
 * Aggregates the sentiment counts.
 * Serves the data securely via a GET endpoint (`/api/sentiment-data`) with CORS enabled.
 
-### 4. `App.jsx` (React Frontend)
+### 5. `App.jsx` (React Frontend)
 A responsive web dashboard built with React and `recharts`.
 * Fetches live data from the Flask API on component mount.
 * Visualizes the sentiment distribution using dynamic Bar and Pie charts.
@@ -70,18 +76,22 @@ You will need Node.js installed for the frontend, Python installed for the backe
    ```bash
    pip install pandas matplotlib seaborn flask flask-cors google-genai
    ```
-3. Open `main.py` and replace `YOUR_NEW_API_KEY` with your actual Google Gemini API key.
-4. Run the sentiment analysis to generate your processed dataset:
+3. Optional: convert a TweetClaw export into the CSV schema used by this project:
+   ```bash
+   python Backends/prepare_tweetclaw_export.py tweetclaw-export.json
    ```
-   python main.py
+4. Open `Backends/main.py` and replace `YOUR_NEW_API_KEY` with your actual Google Gemini API key.
+5. Run the sentiment analysis to generate your processed dataset:
    ```
-5. Run Exploratory Data Analysis(EDA):
+   python Backends/main.py
    ```
-   python analyze_all.py
+6. Run Exploratory Data Analysis(EDA):
    ```
-6. Start the Flask API server:
+   python Backends/analyze_all.py
    ```
-   python app.py
+7. Start the Flask API server:
+   ```
+   python Backends/app.py
    ```
 
 ### 2. Frontend Setup (React)
